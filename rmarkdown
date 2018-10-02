@@ -1,0 +1,79 @@
+---
+title: 'Interim Report 1-Black Friday '
+author: "Amanda Cheung, Toby Chen, Wenjing Chen, Simon Xu"
+"Professor Ranjan"
+"Bus111"
+date: "10/1/2018"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+##Part I. Introduction
+
+This analysis is conducted around a dataset of a retail store during Black Friday. The dataset is consist of over 530 thousands observations with 12 different variables. This data problem is essential to the store’s administrative officers, as the result will give them a better sense of what to prepare for their next Black Friday and maximize the store’s profit. In general, our group aim to find the variables that impact sales most significantly, in order to assist the managers to achieve better results next Black Friday.
+
+##Part II. Data Description & Data Cleaning 
+## II. Data Description
+* User_ID is the variable that represents unique identity number that is different with each customer. Therefore this is a nominal variable.
+* Product_ID is, likewise, the variable representing identity number that is different with each product, so it is a nominal variable.
+* Gender is a nominal variable because it represents a category not a ranking or order.
+* Age is an ordinal variable in this dataset, as ages are separated into age categories, representing a group of customers in that age category. However, the intervals between categories are not necessary equal, so age is ordinal.
+* Occupation is a nominal variable. Although in this dataset it is represented by numbers, the variable could not be ranked or ordered as each number only represent a category. To clean the data, the numbers representing occupation were changed to factors through the command “as.factor”.
+* City_category represents the cities where the customers come from. It is an ordinal measure type because category “A”, “B”, “C” are not equal that they can be ranked regarding some characteristics of the cities.
+* Stay_In_Current_City_Years represents how many years have the customer stay in their current cities. This variable is an interval type variable.
+* Marital_status represents whether the customers are married or not. We change the marital status from numeric to logic in order to better visualize. “FALSE” means they are single and “TRUE” means they are married. It is a nominal measure type because this variable can not be ranked or ordered.
+* Product_category_1 represents the category that the product belongs to, and this is the most general categorizing level of this  1. retail store. The measure type of this variable is therefore nominal. We change the Product category from numeric to character in order to better visualize.
+* Product_Category_2 is a nominal variable, due to its nature as a subcategory of Product_Category_1. There are many missing values in Product_Category_2 due to the fact that not all products require to be categorized to the second level.
+* Product_Category_3 is a nominal variable for the same reason as its upper levels, and the reason for its missing values is the same as Product_Category_2. This variable is dropped from the dataset along with Product_Category_2, as they are both consist of a lot of missing values and analyzing Product_Category_1 would be sufficient enough for analyzing purposes.
+* Purchase represents the customer’s purchase amount in dollars, which therefore is a ratio-type variable.
+
+##Part III. Summary Statistics and Data Visualization
+```{r}
+BlackFriday = read.csv("BlackFriday.csv")
+library('tidyverse')
+ggplot(BlackFriday, aes(x = Age,fill=Age)) + geom_bar()+ggtitle("Age Frequency Table")
+```
+```{r}
+ggplot(BlackFriday, aes(x = Age, y = Purchase, fill=Age)) + geom_col()+ggtitle("Age and Purchase")
+```
+
+For knowing which customer segmentations we currently target and which customer segmentations could be enlarged, we select age variable to see the purchase ability in each age group. Age is a discrete variable. According to the summary of the sample in our dataset, the number of the people who are 26-45 comprises half of the number of the population who takes part in the Black Friday activity. Among them, 214690 are between 26 to 35. As for the relationship between age and purchase ability, we select box graph to represent the correlation. For making it clear, we use different colors to represent different groups. The graph shows that the amount that each age group spend has roughly the same median. More importantly, among the groups, the age group 51-55 has noticeable third quartile higher than that of any other groups, showing that those people may have strong ability to buy the products during the Black Friday period. 
+
+```{r}
+ggplot(BlackFriday, aes(x = Gender,fill=Gender)) + geom_bar()+ggtitle("Gender Frequency")
+```
+
+```{r}
+ggplot(BlackFriday, aes(x = Gender, y = Purchase,fill=Gender)) + geom_boxplot() + ggtitle("Gender and Purchase")
+```
+The gender is chosen since we are wondering if we currently target a appropriate group of customer. For providing better service and maximizing the profit, we are looking for the most appropriate customer segmentation by analyzing this variable. As for the gender which is a discrete variable, the number of males who participate in the Black Friday activity is 405380, which is nearly three times more than that of female group. We select the box plot to analyze the relationship between the gender and the purchase ability. The graph presents that it is obvious that the male group has higher third quartile than the female group, showing that the purchase ability of male is stronger than female. 
+
+```{r}
+BlackFriday$Occupation = as.factor(BlackFriday$Occupation)
+ggplot(BlackFriday, aes(x = Occupation,fill=Occupation)) + geom_bar()+ggtitle("Occupation Frequency")
+```
+```{r}
+ggplot(BlackFriday, aes(x = Occupation, y = Purchase, fill=Occupation)) + geom_col()+ggtitle("Occupation and Purchase")
+```
+This discrete variable is chosen as we need to gain the relationship between the occupation and their purchase to see which type of people  According to the analysis of the occupation which is a discrete variable, it shows that in this sample, those people whose job is 0 and 4 go shopping most frequently. 
+
+```{r}
+ggplot(BlackFriday,aes(x=City_Category, y=Purchase, fill=City_Category))+geom_col()+ggtitle("City Category and Purchase")
+```
+Purchase is a continuous variable and city category is a discrete variable. To better illustrate the correlation between these two data, we use bar graph to visualize the data. We choose to use different colors to represent different city categories because we want to visualize the impact different city categories have on the purchases on Black Friday.From the graph, we can conclude that customers coming from city category B purchased the most, following by those come from city category C. While customers from city category A purchase the least on Black Friday. 
+
+```{r}
+BlackFriday$Marital_Status = as.logical(BlackFriday$Marital_Status)
+ggplot(BlackFriday,aes(x=Marital_Status, y=Purchase, fill=Marital_Status))+geom_col()+ggtitle("Marital Status and Purchase")
+```
+Marital status is a discrete variable and purchase is a continuous variable. To better illustrate the correlation between these two data, we use bar graph to visualize the data. We choose to use different colors to distinguish marital status of the customers, since we want to visualize the impact different marital status have on the purchases on Black Friday. From the graph, we can conclude that customers who are single tend to purchase more on Black Friday. 
+
+```{r}
+BlackFriday$Product_Category_1 = as.character(BlackFriday$Product_Category_1)
+
+ggplot(BlackFriday,aes(x=Product_Category_1, y=Purchase, fill=Product_Category_1))+geom_col()+ggtitle("Product Category 1 and Purchase")
+```
+Product category is a discrete variable and purchase is a continuous variable. To better illustrate the correlation between these two data, we use bar graph to visualize the data. We choose to use different colors to distinguish different product types, since we want to find out which product category has the most sales. From the graph, we can conclude that product category#1 has the most sales and its sales are much more than the other product category. Except for product category#1, product category#5, #8 have noticeable sales on Black Friday. 
+
+
